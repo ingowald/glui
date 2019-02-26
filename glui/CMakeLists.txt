@@ -27,6 +27,7 @@ SET(GLUI_SRCS
  glui_string.cpp
  glui_textbox.cpp
  glui_translation.cpp
+ glui_transfer_function.cpp
  glui_tree.cpp
  glui_treepanel.cpp
  glui_window.cpp

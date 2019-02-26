@@ -996,12 +996,10 @@ namespace glui {
 
   void  GLUI_Control::set_float_array_val( float *array_ptr )
   {
-    int i;
-
     if ( array_ptr == NULL )
       return;
 
-    for( i=0; i<float_array_size; i++ ) {
+    for( int i=0; i<float_array_size; i++ ) {
       float_array_val[i] = array_ptr[i];
     }
 

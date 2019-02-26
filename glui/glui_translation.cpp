@@ -462,11 +462,11 @@ namespace glui {
     glBegin( GL_LINES );
 
     SET_COL_IN(1+c_off);  DRAW_SEG( 0.0, y2-1.0, -x2, y1-1.0 );
-    SET_COL_IN(6+c_off);	DRAW_SEG( -x2+2.0, y1+1.0, -x1b+1.0, y1+1.0 );
-    SET_COL_IN(0+c_off);	DRAW_SEG( -x1b+1.0, y1+1.0, -x1a+1.0, y0 );
-    SET_COL_IN(3+c_off);	DRAW_SEG( 0.0, y2-1.0, x2, y1-1.0 );
-    SET_COL_IN(6+c_off);	DRAW_SEG( x2-1.0, y1+1.0, x1b-1.0, y1+1.0 );
-    SET_COL_IN(4+c_off);	DRAW_SEG( x1b-1.0, y1+1.0, x1a-1.0, y0 );
+    SET_COL_IN(6+c_off);  DRAW_SEG( -x2+2.0, y1+1.0, -x1b+1.0, y1+1.0 );
+    SET_COL_IN(0+c_off);  DRAW_SEG( -x1b+1.0, y1+1.0, -x1a+1.0, y0 );
+    SET_COL_IN(3+c_off);  DRAW_SEG( 0.0, y2-1.0, x2, y1-1.0 );
+    SET_COL_IN(6+c_off);  DRAW_SEG( x2-1.0, y1+1.0, x1b-1.0, y1+1.0 );
+    SET_COL_IN(4+c_off);  DRAW_SEG( x1b-1.0, y1+1.0, x1a-1.0, y0 );
 
     SET_COL_OUT(0+c_off);  DRAW_SEG( -x1a, y0, -x1b, y1  );
     SET_COL_OUT(6+c_off);  DRAW_SEG( -x1b, y1,  -x2, y1  );
@@ -540,7 +540,7 @@ namespace glui {
 
   void  GLUI_Translation::set_one_val( float val, int index )
   {
-    float_array_val[index] = val;	  /* set value in array              */
+    float_array_val[index] = val;    /* set value in array              */
 
     /*** The code below is like output_live, except it only operates on
          a single member of the float array (given by 'index') instead of

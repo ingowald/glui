@@ -13,6 +13,7 @@
 
 #include <string.h>
 #include <GL/glui.h>
+#include <GL/glui/TransferFunction.h>
 
 using namespace glui;
 
@@ -489,6 +490,20 @@ int main(int argc, char* argv[])
     new GLUI_Translation( glui2, "Objects Z", GLUI_TRANSLATION_Z, &obj_pos[2] );
   trans_z->set_speed( .005 );
 
+
+
+
+  /*** Create the bottom subwindow ***/
+  GLUI_Context *glui3 = GLUI_Master.create_glui_subwindow( main_window, 
+                                                           GLUI_SUBWINDOW_BOTTOM );
+  glui3->set_main_gfx_window( main_window );
+
+  const int NUM_XF = 128;
+  float xf[NUM_XF];
+  GLUI_TransferFunction *view_rot2
+    = new GLUI_TransferFunction(glui3, "Transfer Function",xf,NUM_XF );
+
+  
   /**** Regular GLUT main loop ****/
   
   glutMainLoop();

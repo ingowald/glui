@@ -37,6 +37,15 @@
 // that come from old GLUT headers.
 #include <cstdlib>
 
+#include <iostream>
+
+#ifndef PRINT
+# define PRINT(var) std::cout << #var << "=" << var << std::endl;
+# define PING std::cout << __FILE__ << "::" << __LINE__ << ": " << __PRETTY_FUNCTION__ << std::endl;
+#endif
+
+
+
 #if defined(GLUI_FREEGLUT)
 
 // FreeGLUT does not yet work perfectly with GLUI_Context *
