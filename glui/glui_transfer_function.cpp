@@ -35,6 +35,7 @@
 #include "GL/glui/TransferFunction.h"
 #include "glui_internal.h"
 #include "algebra3.h"
+#include "glui_internal_control.h"
 
 namespace glui {
   /********************** GLUI_TransferFunction::GLUI_TransferFunction() ***/
@@ -68,18 +69,22 @@ namespace glui {
   /********************** GLUI_TransferFunction::iaction_mouse_down_handler() ***/
   /*  These are really in local coords (5/10/99)                            */
 
-  int    GLUI_TransferFunction::iaction_mouse_down_handler( int local_x,
-                                                       int local_y )
+  int    GLUI_TransferFunction::mouse_down_handler( int local_x,
+                                                            int local_y )
   {
-    int center_x, center_y;
+    // int center_x, center_y;
 
-    down_x = local_x;
-    down_y = local_y;
+    lastMouseDownPosX = local_x;
+    lastMouseDownPosY = local_y;
+    // last_mouse_down_x = local_x;
+    // last_mouse_down_y = local_y;
 
-    glutSetCursor( GLUT_CURSOR_LEFT_RIGHT );
-    orig_x = float_array_val[0];
-
-    trans_mouse_code = 1;
+    mouse_held_down_handler(local_x,local_y,true);
+    
+    // glutSetCursor( GLUT_CURSOR_LEFT_RIGHT );
+    // orig_x = float_array_val[0];
+    
+    // trans_mouse_code = 1;
     redraw();
 
     return false;
@@ -88,11 +93,13 @@ namespace glui {
 
   /*********************** GLUI_TransferFunction::iaction_mouse_up_handler() **********/
 
-  int    GLUI_TransferFunction::iaction_mouse_up_handler( int local_x, int local_y,
-                                                     bool inside )
+  int    GLUI_TransferFunction::mouse_up_handler( int local_x,
+                                                          int local_y,
+                                                          bool inside )
   {
-    trans_mouse_code = GLUI_TRANSLATION_MOUSE_NONE;
-    locked = GLUI_TRANSLATION_LOCK_NONE;
+    // mouseIsPressed = false;
+    // trans_mouse_code = GLUI_TRANSLATION_MOUSE_NONE;
+    // locked = GLUI_TRANSLATION_LOCK_NONE;
 
     redraw();
 
@@ -102,122 +109,191 @@ namespace glui {
 
   /******************* GLUI_TransferFunction::iaction_mouse_held_down_handler() ******/
 
-  int    GLUI_TransferFunction::iaction_mouse_held_down_handler( int local_x, int local_y,
-                                                            bool inside)
+  int    GLUI_TransferFunction::mouse_held_down_handler( int local_x, int local_y,
+                                                                 bool inside)
   {
-    float x_off, y_off;
-    float off_array[2];
+    printf("mouse_down %i %i - last %i %i\n",
+           local_x-x_abs,local_y-y_abs,
+           lastMouseDownPosX,
+           lastMouseDownPosY
+           );
 
-    x_off = scale_factor * (float)(local_x - down_x);
-    y_off = -scale_factor * (float)(local_y - down_y);
+    /* compute new and old (in terms of dragging) mouse position
+       relative to xf widget */
 
-    if ( context->curr_modifiers & GLUT_ACTIVE_SHIFT ) {
-      x_off *= 100.0f;
-      y_off *= 100.0f;
+    // glTranslatef(outer_border_width+inner_border_width,
+    //              outer_border_width+inner_border_width,
+    //              0);
+    // glScalef(w-2*inner_border_width-2*outer_border_width-2,
+    //          h-2*inner_border_width-2*outer_border_width-2-GLUI_STATICTEXT_SIZE-1,
+    
+    float new_x = (local_x - x_abs -1 - total_border_width) / float(w - 2*total_border_width-2);
+    float new_y = 1.f - (local_y - y_abs -1 - total_border_width) / float(h - 2*total_border_width-2-GLUI_STATICTEXT_SIZE-1);
+
+    float old_x = (lastMouseDownPosX - x_abs -1 - total_border_width) / float(w - 2*total_border_width-2);
+    float old_y = 1.f - (lastMouseDownPosY - y_abs -1 - total_border_width) / float(h - 2*total_border_width-2-GLUI_STATICTEXT_SIZE-1);
+
+
+    if (old_x < new_x) {
+      std::swap(old_x,new_x);
+      std::swap(old_y,new_y);
     }
-    else if ( context->curr_modifiers & GLUT_ACTIVE_CTRL ) {
-      x_off *= .01f;
-      y_off *= .01f;
-    }
+
+    // int i0 = int(old_x*xf_alpha_size);
+    // int i1 = int(new_x*xf_alpha_size);
+    // for (int i=i0;i<=i1;i++) {
+    //   if (i < 0 || i >= xf_alpha_size) continue;
+    //   float val = (i-i0)/float(i1-i0+1)
+    // }
+    
+    // printf("drag %f %f\n",new_x,new_y);
+    
+    // float x_off, y_off;
+    // float off_array[2];
+
+    // x_off = scale_factor * (float)(local_x - down_x);
+    // y_off = -scale_factor * (float)(local_y - down_y);
+
+    // if ( context->curr_modifiers & GLUT_ACTIVE_SHIFT ) {
+    //   x_off *= 100.0f;
+    //   y_off *= 100.0f;
+    // }
+    // else if ( context->curr_modifiers & GLUT_ACTIVE_CTRL ) {
+    //   x_off *= .01f;
+    //   y_off *= .01f;
+    // }
 
 
-      off_array[0] = x_off + orig_x;
+    // off_array[0] = x_off;// + orig_x;
 
-    set_float_array_val( (float*) &off_array[0] );
+    // set_float_array_val( (float*) &off_array[0] );
 
+    
+    lastMouseDownPosX = local_x;
+    lastMouseDownPosY = local_y;
+    
     return false;
   }
 
 
   /******************** GLUI_TransferFunction::iaction_draw_active_area_persp() **************/
 
-  void    GLUI_TransferFunction::iaction_draw_active_area_persp( void )
-  {
-  }
+  // void    GLUI_TransferFunction::iaction_draw_active_area_persp( void )
+  // {
+  // }
 
 
   /******************** GLUI_TransferFunction::iaction_draw_active_area_ortho() **********/
 
-  void    GLUI_TransferFunction::iaction_draw_active_area_ortho( void )
+  // void    GLUI_TransferFunction::iaction_draw_active_area_ortho( void )
+  void    GLUI_TransferFunction::draw( int,int )
   {
-    /********* Draw emboss circles around arcball control *********/
-    float radius;
-    radius = (float)(h-22)/2.0;  /*  MIN((float)w/2.0, (float)h/2.0); */
+    GLUI_DRAWINGSENTINAL_IDIOM
     glLineWidth( 1.0 );
 
-    draw_emboss_box((int)-radius-2, (int)radius+2,
-                    (int)-radius-2, (int)radius+2);
+    draw_name(w/2-string_width(name)/2,h);
+    draw_emboss_box(0,0,1,1);
+    draw_emboss_box(outer_border_width,w-1-outer_border_width,
+                    outer_border_width,h-1-outer_border_width-1*GLUI_STATICTEXT_SIZE);
+
+    glTranslatef(outer_border_width+inner_border_width,
+                 outer_border_width+inner_border_width,
+                 0);
+    glScalef(w-2*inner_border_width-2*outer_border_width-2,
+             h-2*inner_border_width-2*outer_border_width-2-GLUI_STATICTEXT_SIZE-1,
+             1);
+    // draw_box(0,
+
+    glColor3f(1,0,0);
+    glBegin( GL_QUADS );
+    glVertex2f( 0,0 );       glVertex2i( 0,1 );
+    glVertex2f( 1,1 );       glVertex2i( 1,0 );
+    glEnd();
     
-    glMatrixMode( GL_MODELVIEW );
-    glPushMatrix();
-    drawXF();
-    glPopMatrix();
+    // for (int i=0;i<xf_alpha_size;i++) {
+    //   glBegin( GL_QUADS );
+    //   glVertex2f( x_min, y_min );       glVertex2i( x_max, y_min );
+    //   glVertex2f( x_max, y_max );       glVertex2i( x_min, y_max );
+    //   glEnd();
+    // }
+    //   glColor3f(1,0,0);
+    //   glVertex2f(i-64,128-64);
+    //   glVertex2f(i-64,128-64-128*xf_alpha[i]);
+    // }
+    
+    
+    
+    // glMatrixMode( GL_MODELVIEW );
+    // glPushMatrix();
+    // drawXF();
+    // glPopMatrix();
+    // draw_active_area();
   }
 
 
   /******************************** GLUI_TransferFunction::iaction_dump() **********/
 
-  void     GLUI_TransferFunction::iaction_dump( FILE *output )
-  {
-  }
+  // void     GLUI_TransferFunction::iaction_dump( FILE *output )
+  // {
+  // }
 
 
-  /******************** GLUI_TransferFunction::iaction_special_handler() **********/
+  // /******************** GLUI_TransferFunction::iaction_special_handler() **********/
 
-  int    GLUI_TransferFunction::iaction_special_handler( int key,int modifiers )
-  {
+  // int    GLUI_TransferFunction::iaction_special_handler( int key,int modifiers )
+  // {
 
-    return false;
-  }
-
-
+  //   return false;
+  // }
 
 
-  void GLUI_TransferFunction::drawXF()
-  {
 
-    glLineWidth( 1.0 );
-    /*** Draw arrow outline ***/
-    glBegin( GL_LINES );
 
-    PRINT(float_array_size);
-    // glMatrixMode(GL_MODELVIEW);
-    // glTranslatef(-50,-50,0);
-    for (int i=0;i<xf_alpha_size;i++) {
-      glColor3f(1,0,0);
-      glVertex2f(i-64,128-64);
-      glVertex2f(i-64,128-64-128*xf_alpha[i]);
-    }
+  // void GLUI_TransferFunction::drawXF()
+  // {
 
-    glEnd();
+  //   glLineWidth( 1.0 );
+  //   /*** Draw arrow outline ***/
+  //   glBegin( GL_LINES );
+
+  //   PRINT(float_array_size);
+  //   // glMatrixMode(GL_MODELVIEW);
+  //   // glTranslatef(-50,-50,0);
+  //   // for (int i=0;i<xf_alpha_size;i++) {
+  //   //   glColor3f(1,0,0);
+  //   //   glVertex2f(i-64,128-64);
+  //   //   glVertex2f(i-64,128-64-128*xf_alpha[i]);
+  //   // }
+
+  //   glEnd();
     
-    printf("drawing xf\n");
-  }
+  //   printf("drawing xf\n");
+  // }
 
   /*************************** GLUI_TransferFunction::get_mouse_code() *************/
 
-  int    GLUI_TransferFunction::get_mouse_code( int x, int y )
-  {
-    if ( x == 0 AND y < 0 )
-      return GLUI_TRANSLATION_MOUSE_DOWN;
-    else if ( x == 0 AND y > 0 )
-      return GLUI_TRANSLATION_MOUSE_UP;
-    else if ( x > 0 AND y == 0 )
-      return GLUI_TRANSLATION_MOUSE_LEFT;
-    else if ( x < 0 AND y == 0 )
-      return GLUI_TRANSLATION_MOUSE_RIGHT;
-    else if ( x < 0 AND y < 0 )
-      return GLUI_TRANSLATION_MOUSE_DOWN_LEFT;
-    else if ( x < 0 AND y > 0 )
-      return GLUI_TRANSLATION_MOUSE_DOWN_RIGHT;
-    else if ( x > 0 AND y < 0 )
-      return GLUI_TRANSLATION_MOUSE_UP_LEFT;
-    else if ( x > 0 AND y > 0 )
-      return GLUI_TRANSLATION_MOUSE_UP_RIGHT;
+  // int    GLUI_TransferFunction::get_mouse_code( int x, int y )
+  // {
+  //   if ( x == 0 AND y < 0 )
+  //     return GLUI_TRANSLATION_MOUSE_DOWN;
+  //   else if ( x == 0 AND y > 0 )
+  //     return GLUI_TRANSLATION_MOUSE_UP;
+  //   else if ( x > 0 AND y == 0 )
+  //     return GLUI_TRANSLATION_MOUSE_LEFT;
+  //   else if ( x < 0 AND y == 0 )
+  //     return GLUI_TRANSLATION_MOUSE_RIGHT;
+  //   else if ( x < 0 AND y < 0 )
+  //     return GLUI_TRANSLATION_MOUSE_DOWN_LEFT;
+  //   else if ( x < 0 AND y > 0 )
+  //     return GLUI_TRANSLATION_MOUSE_DOWN_RIGHT;
+  //   else if ( x > 0 AND y < 0 )
+  //     return GLUI_TRANSLATION_MOUSE_UP_LEFT;
+  //   else if ( x > 0 AND y > 0 )
+  //     return GLUI_TRANSLATION_MOUSE_UP_RIGHT;
 
 
-    return GLUI_TRANSLATION_MOUSE_NONE;
-  }
+  //   return GLUI_TRANSLATION_MOUSE_NONE;
+  // }
 
 
   /******************************* GLUI_TransferFunction::set_one_val() ****/

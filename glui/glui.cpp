@@ -575,7 +575,7 @@ namespace glui {
     glCullFace(GL_BACK);
     glDisable(GL_CULL_FACE);
     glDisable(GL_LIGHTING);
-    set_current_draw_buffer();
+    // set_current_draw_buffer();
 
     /**** This function is used as a special place to do 'safe' processing,
           e.g., handling window close requests.
@@ -602,9 +602,9 @@ namespace glui {
 
     /*******    Draw GLUI_Context *window     ******/
     glClearColor(bkgd_color[0] / 255.0f,
-                  bkgd_color[1] / 255.0f,
-                  bkgd_color[2] / 255.0f,
-                  1.0f);
+                 bkgd_color[1] / 255.0f,
+                 bkgd_color[2] / 255.0f,
+                 1.0f);
     glClear(GL_COLOR_BUFFER_BIT); /* | GL_DEPTH_BUFFER_BIT);          */
 
     set_ortho_projection();
@@ -1092,40 +1092,43 @@ namespace glui {
   */
   bool	     GLUI_Main::should_redraw_now(GLUI_Control *ctl)
   {
-    switch (buffer_mode) {
-    case buffer_front: return true; /* always draw in front-buffer mode */
-    case buffer_back: {
-      int orig = ctl->set_to_glut_window();
-      glutPostRedisplay(); /* redraw soon */
-      ctl->restore_window(orig);
-      return false; /* don't draw now. */
-    }
-    }
-    return false; /* never executed */
+    return true;
+    // switch (buffer_mode) {
+    // case buffer_front: return true; /* always draw in front-buffer mode */
+    // case buffer_back: {
+    //   int orig = ctl->set_to_glut_window();
+    //   glutPostRedisplay(); /* redraw soon */
+    //   ctl->restore_window(orig);
+    //   return false; /* don't draw now. */
+    // }
+    // }
+    // return false; /* never executed */
   }
 
   /********************************* GLUI_Main::set_current_draw_buffer() ********/
 
-  int          GLUI_Main::set_current_draw_buffer(void)
-  {
-    /* Save old buffer */
-    GLint state;
-    glGetIntegerv(GL_DRAW_BUFFER, &state);
-    /* Switch to new buffer */
-    switch (buffer_mode) {
-    case buffer_front: glDrawBuffer(GL_FRONT); break;
-    case buffer_back:  glDrawBuffer(GL_BACK);  break; /* might not be needed... */
-    }
-    return (int)state;
-  }
+  // int          GLUI_Main::set_current_draw_buffer(void)
+  // {
+  //   // /* Save old buffer */
+  //   GLint state;
+  //   glGetIntegerv(GL_DRAW_BUFFER, &state);
+  //   // /* Switch to new buffer */
+  //   // switch (buffer_mode) {
+  //   // case buffer_front: glDrawBuffer(GL_FRONT); break;
+  //   // case buffer_back:
+  //   glDrawBuffer(GL_BACK);  //break; /* might not be needed... */
+  //   // }
+  //   // return (int)state;
+  //   return (int)state;
+  // }
 
 
   /********************************* GLUI_Main::restore_draw_buffer() **********/
 
-  void         GLUI_Main::restore_draw_buffer(int buffer_state)
-  {
-    glDrawBuffer(buffer_state);
-  }
+  // void         GLUI_Main::restore_draw_buffer(int buffer_state)
+  // {
+  //   glDrawBuffer(buffer_state);
+  // }
 
 
   /******************************************** GLUI_Main::GLUI_Main() ********/
@@ -2094,10 +2097,10 @@ namespace glui {
     :c(c_)
   {
     orig_win = c->set_to_glut_window();
-    orig_buf = c->context->set_current_draw_buffer();
+    // orig_buf = c->context->set_current_draw_buffer();
   }
   GLUI_DrawingSentinal::~GLUI_DrawingSentinal() {
-    c->context->restore_draw_buffer(orig_buf);
+    // c->context->restore_draw_buffer(orig_buf);
     c->restore_window(orig_win);
   }
 

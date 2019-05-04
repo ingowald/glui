@@ -556,46 +556,46 @@ namespace glui {
       parent_y_abs += GLUI_PANEL_EMBOSS_TOP;
     }
 
-    if ( 0 ) {
-      GLUI_Node *first, *last, *curr;
+    // if ( 0 ) {
+    //   GLUI_Node *first, *last, *curr;
 
-      /**   Look for first control in this column   **/
-      first = this;
-      while (first->prev() AND !dynamic_cast<GLUI_Column*>(first->prev()) )
-        first = first->prev();
+    //   /**   Look for first control in this column   **/
+    //   first = this;
+    //   while (first->prev() AND !dynamic_cast<GLUI_Column*>(first->prev()) )
+    //     first = first->prev();
 
-      /**   Look for last control in this column    **/
-      last = this;
-      while ( last->next() AND !dynamic_cast<GLUI_Column*>(first->next()) )
-        last = last->next();
+    //   /**   Look for last control in this column    **/
+    //   last = this;
+    //   while ( last->next() AND !dynamic_cast<GLUI_Column*>(first->next()) )
+    //     last = last->next();
 
-      curr = first;
-      int max_w = -1;
-      do {
-        if ( ((GLUI_Control*)curr)->w > max_w )
-          max_w = ((GLUI_Control*)curr)->w;
+    //   curr = first;
+    //   int max_w = -1;
+    //   do {
+    //     if ( ((GLUI_Control*)curr)->w > max_w )
+    //       max_w = ((GLUI_Control*)curr)->w;
 
-        if ( curr == last )
-          break;
+    //     if ( curr == last )
+    //       break;
 
-        curr = curr->next();
-      } while( curr != NULL );
+    //     curr = curr->next();
+    //   } while( curr != NULL );
 
-      *col_x     = ((GLUI_Control*)first)->x_abs;
-      *col_y     = ((GLUI_Control*)first)->y_abs;
-      *col_w     = max_w;
-      if ( parent() ) {
-        *col_h     = ((GLUI_Control*)parent())->h;
-        *col_x_off = ((GLUI_Control*)parent())->x_off;
-      }
-      else {
-        *col_h = 10;
-        *col_x_off = 0;
-      }
-      *col_y_off = 0;
+    //   *col_x     = ((GLUI_Control*)first)->x_abs;
+    //   *col_y     = ((GLUI_Control*)first)->y_abs;
+    //   *col_w     = max_w;
+    //   if ( parent() ) {
+    //     *col_h     = ((GLUI_Control*)parent())->h;
+    //     *col_x_off = ((GLUI_Control*)parent())->x_off;
+    //   }
+    //   else {
+    //     *col_h = 10;
+    //     *col_x_off = 0;
+    //   }
+    //   *col_y_off = 0;
 
-      return;
-    }
+    //   return;
+    // }
 
     if ( 1 ) {    /* IS THIS WRONG? */
       /*** Look for preceding column ***/

@@ -323,7 +323,7 @@ int main(int argc, char* argv[])
   glutInitDisplayMode( GLUT_RGB | GLUT_DOUBLE | GLUT_DEPTH );
   glutInitWindowPosition( 50, 50 );
   glutInitWindowSize( 800, 600 );
- 
+  
   main_window = glutCreateWindow( "GLUI_Context *Example 5" );
   glutDisplayFunc( myGlutDisplay );
   GLUI_Master.set_glutReshapeFunc( myGlutReshape );  
@@ -457,52 +457,56 @@ int main(int argc, char* argv[])
   glui_context->set_main_gfx_window( main_window );
 
 
-  /*** Create the bottom subwindow ***/
-  glui2 = GLUI_Master.create_glui_subwindow( main_window, 
-                                             GLUI_SUBWINDOW_BOTTOM );
-  glui2->set_main_gfx_window( main_window );
+  // /*** Create the bottom subwindow ***/
+  // glui2 = GLUI_Master.create_glui_subwindow( main_window, 
+  //                                            GLUI_SUBWINDOW_BOTTOM );
+  // glui2->set_main_gfx_window( main_window );
 
-  GLUI_Rotation *view_rot = new GLUI_Rotation(glui2, "Objects", view_rotate );
-  view_rot->set_spin( 1.0 );
-  new GLUI_Column( glui2, false );
-  GLUI_Rotation *sph_rot = new GLUI_Rotation(glui2, "Sphere", sphere_rotate );
-  sph_rot->set_spin( .98 );
-  new GLUI_Column( glui2, false );
-  GLUI_Rotation *tor_rot = new GLUI_Rotation(glui2, "Torus", torus_rotate );
-  tor_rot->set_spin( .98 );
-  new GLUI_Column( glui2, false );
-  GLUI_Rotation *lights_rot = new GLUI_Rotation(glui2, "Blue Light", lights_rotation );
-  lights_rot->set_spin( .82 );
-  new GLUI_Column( glui2, false );
-  GLUI_Translation *trans_xy = 
-    new GLUI_Translation(glui2, "Objects XY", GLUI_TRANSLATION_XY, obj_pos );
-  trans_xy->set_speed( .005 );
-  new GLUI_Column( glui2, false );
-  GLUI_Translation *trans_x = 
-    new GLUI_Translation(glui2, "Objects X", GLUI_TRANSLATION_X, obj_pos );
-  trans_x->set_speed( .005 );
-  new GLUI_Column( glui2, false );
-  GLUI_Translation *trans_y = 
-    new GLUI_Translation( glui2, "Objects Y", GLUI_TRANSLATION_Y, &obj_pos[1] );
-  trans_y->set_speed( .005 );
-  new GLUI_Column( glui2, false );
-  GLUI_Translation *trans_z = 
-    new GLUI_Translation( glui2, "Objects Z", GLUI_TRANSLATION_Z, &obj_pos[2] );
-  trans_z->set_speed( .005 );
-
-
+  // GLUI_Rotation *view_rot = new GLUI_Rotation(glui2, "Objects", view_rotate );
+  // view_rot->set_spin( 1.0 );
+  // new GLUI_Column( glui2, false );
+  // GLUI_Rotation *sph_rot = new GLUI_Rotation(glui2, "Sphere", sphere_rotate );
+  // sph_rot->set_spin( .98 );
+  // new GLUI_Column( glui2, false );
+  // GLUI_Rotation *tor_rot = new GLUI_Rotation(glui2, "Torus", torus_rotate );
+  // tor_rot->set_spin( .98 );
+  // new GLUI_Column( glui2, false );
+  // GLUI_Rotation *lights_rot = new GLUI_Rotation(glui2, "Blue Light", lights_rotation );
+  // lights_rot->set_spin( .82 );
+  // new GLUI_Column( glui2, false );
+  // GLUI_Translation *trans_xy = 
+  //   new GLUI_Translation(glui2, "Objects XY", GLUI_TRANSLATION_XY, obj_pos );
+  // trans_xy->set_speed( .005 );
+  // new GLUI_Column( glui2, false );
+  // GLUI_Translation *trans_x = 
+  //   new GLUI_Translation(glui2, "Objects X", GLUI_TRANSLATION_X, obj_pos );
+  // trans_x->set_speed( .005 );
+  // new GLUI_Column( glui2, false );
+  // GLUI_Translation *trans_y = 
+  //   new GLUI_Translation( glui2, "Objects Y", GLUI_TRANSLATION_Y, &obj_pos[1] );
+  // trans_y->set_speed( .005 );
+  // new GLUI_Column( glui2, false );
+  // GLUI_Translation *trans_z = 
+  //   new GLUI_Translation( glui2, "Objects Z", GLUI_TRANSLATION_Z, &obj_pos[2] );
+  // trans_z->set_speed( .005 );
 
 
-  /*** Create the bottom subwindow ***/
-  GLUI_Context *glui3 = GLUI_Master.create_glui_subwindow( main_window, 
-                                                           GLUI_SUBWINDOW_BOTTOM );
-  glui3->set_main_gfx_window( main_window );
+
+
+  /*** Create the bottom subwindow ***/ 
+  // GLUI_Context *glui3 = GLUI_Master.create_glui_subwindow( main_window, 
+  //                                                          GLUI_SUBWINDOW_BOTTOM );
+  // glui3->set_main_gfx_window( main_window );
 
   const int NUM_XF = 128;
   float xf[NUM_XF];
-  GLUI_TransferFunction *view_rot2
-    = new GLUI_TransferFunction(glui3, "Transfer Function",xf,NUM_XF );
 
+  // GLUI_StaticText *xf_label
+  //   = new GLUI_StaticText(glui_context,"XF");
+#if 1
+  GLUI_TransferFunction *xf_widget
+    = new GLUI_TransferFunction(glui_context, "Transfer Function",xf,NUM_XF );
+#endif
   
   /**** Regular GLUT main loop ****/
   
